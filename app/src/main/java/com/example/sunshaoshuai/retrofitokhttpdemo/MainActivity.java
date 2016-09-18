@@ -1,5 +1,21 @@
+/*
+ * Copyright (c) 2016.   Sss
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.example.sunshaoshuai.retrofitokhttpdemo;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +29,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import demo.materialdesign.sss.com.retrofit2okhttp3.HttpUrl;
+import demo.materialdesign.sss.com.retrofit2okhttp3.NoActionAjaxCallBack;
+import demo.materialdesign.sss.com.retrofit2okhttp3.RetrofitInstance;
+import demo.materialdesign.sss.com.retrofit2okhttp3.SssAjaxCallBack;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -22,9 +42,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private String 要上传的文件的路径;
+    private String 额外的参数对象;
+    private String 额外的参数名;
+    private String 你的接口相对路径;
 
-    private String DOMAIN_NAME = "http://v2api20160516-test.chinacloudsites.cn";
+    private String DOMAIN_NAME = HttpUrl.DOMAIN_NAME;
     private String TAG = "MainActivity";
+    private RetrofitInstance retrofit = RetrofitInstance.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.OKHttp_Post).setOnClickListener(this);
         findViewById(R.id.OKHttp_Get).setOnClickListener(this);
         findViewById(R.id.Retrofit_From_upload).setOnClickListener(this);
+        findViewById(R.id.Retrofit_okhttp_post).setOnClickListener(this);
     }
 
 
@@ -59,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.Retrofit_From_upload:
                 onFromUpload();
+                break;
+            case R.id.Retrofit_okhttp_post:
+                onRetrofitOkhttpPost();
                 break;
         }
     }
@@ -94,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     map.put("MobilePhone", "18618490056");
                     map.put("Password", "654321");
                     String json = new Gson().toJson(map);
-                    String response = example.post(DOMAIN_NAME + "你的接口相对路径", json);
+                    String response = example.post(DOMAIN_NAME + 你的接口相对路径, json);
                     Log.e(TAG, "" + response.toString());//不知道为何就是不打印，当数据是有的
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -102,6 +131,68 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
+
+    /**
+     * 异步Retrofit2.0+okhtttp3.0 post请求
+     */
+    private void onRetrofitOkhttpPost() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MobilePhone", "18618490056");
+        map.put("Password", "654321");
+      /*
+        数据返回后需要进行操作时使用SssAjaxCallBack对象
+        不需要操作用NoActionAjaxCallBack对象
+        如：
+        doJsonPost("你的接口相对路径", json, new NoActionAjaxCallBack());
+       */
+        doJsonPost(你的接口相对路径, map, new SssAjaxCallBack() {
+            @Override
+            public void onReceiveData(String data, String msg) {
+                // TODO: 16/9/18  成功时的回调
+                Log.e(TAG, "成功时的回调");
+            }
+
+            @Override
+            public void onReceiveError(int errorCode, String msg) {
+                // TODO: 16/9/18 失败时的回调
+                Log.e(TAG, "失败时的回调");
+            }
+
+            @Override
+            public void onConnectServerFailed(Call call, Throwable t) {
+                // TODO: 16/9/18 请求失败的回调
+                Log.e(TAG, "请求失败的回调");
+            }
+        });
+
+
+    }
+
+    /**
+     * 以json数据格式post方式提交数据
+     *
+     * @param path     路径
+     * @param data     转成json字符串的参数集
+     * @param callBack 回调
+     * @return
+     */
+    private void doJsonPost(String path, @NonNull String data, NoActionAjaxCallBack callBack) {
+
+        retrofit.jsonPost(path, data, callBack);
+    }
+
+    /**
+     * 以json数据格式post方式提交数据
+     *
+     * @param path     路径
+     * @param map      参数集
+     * @param callBack 回调
+     * @return
+     */
+    private void doJsonPost(String path, Map<String, Object> map, NoActionAjaxCallBack callBack) {
+        retrofit.jsonPost(path, map, callBack);
+    }
+
 
     /**
      * 异步Retrofit From表单格式Post上传
@@ -115,16 +206,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         GitHubService service = retrofit.create(GitHubService.class);
 
         //创建上传对象
-        File file = new File("要上传的文件的路径");
+        File file = new File(要上传的文件的路径);
         RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
 
         //创建额外的参数列表
         Map<String, RequestBody> params = new HashMap<>();
-        requestBody = RequestBody.create(MediaType.parse("text/plain"), "额外的参数对象");
-        params.put("额外的参数名", requestBody);
+        requestBody = RequestBody.create(MediaType.parse("text/plain"), 额外的参数对象);
+        params.put(额外的参数名, requestBody);
 
-        Call<JsonObject> call = service.fromPost("相对路径", part, params);
+        Call<JsonObject> call = service.fromPost(你的接口相对路径, part, params);
 
         //3.发送请求
         call.enqueue(new Callback<JsonObject>() {
