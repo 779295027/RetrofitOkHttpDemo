@@ -8,7 +8,15 @@ public class User {
     private int StatesCode;
     private String StatesDesc;
     private String Message;
+    private Object Data;
 
+    public Object getData() {
+        return Data;
+    }
+
+    public void setData(Object data) {
+        Data = data;
+    }
 
     public boolean isIsSuccess() {
         return IsSuccess;
@@ -50,6 +58,7 @@ public class User {
                 ", StatesCode=" + StatesCode +
                 ", StatesDesc='" + StatesDesc + '\'' +
                 ", Message='" + Message + '\'' +
+                ", Data=" + Data +
                 '}';
     }
 }

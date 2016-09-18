@@ -37,4 +37,18 @@ public class ExampleUnitTest {
         System.out.println(response);
     }
 
+    @Test
+    public void jsonMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("商家ID", "AAA");
+
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("商品ID", 1);
+
+        map.put("商品列表", map1);
+        Gson gson = new Gson();
+        System.out.print(gson.toJson(map));
+
+    }
+
 }

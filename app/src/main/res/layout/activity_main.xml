@@ -26,7 +26,7 @@
         android:id="@+id/OKHttp_Get"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="OKHttp GetS" />
+        android:text="OKHttp Get" />
 
     <Button
         android:id="@+id/Retrofit_Post_two"
@@ -40,4 +40,15 @@
         android:layout_height="wrap_content"
         android:text="异步Retrofit Post" />
 
+    <Button
+        android:id="@+id/Retrofit_Post_three"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="同步Retrofit Post JsonObject返回格式" />
+
+    <Button
+        android:id="@+id/Retrofit_From_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="From表单格式Post上传" />
 </LinearLayout>
