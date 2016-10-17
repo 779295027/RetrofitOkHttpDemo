@@ -43,4 +43,24 @@ public class GetExample {
         String response = example.run("https://raw.github.com/square/okhttp/master/README.md");
         System.out.println(response);
     }
+
 }
+
+
+// ┏┓       ┏┓
+//┏┛┻━━━━━━━┛┻┓
+//┃           ┃ 　
+//┃     ━     ┃
+//┃  ┳┛   ┗┳  ┃
+//┃           ┃
+//┃     ┻     ┃
+//┃           ┃
+//┗━┓     ┏━━━┛
+//  ┃     ┃   神兽保佑　　　　　　　　
+//  ┃     ┃   代码无BUG！
+//  ┃     ┗━━━━━━┓
+//  ┃　　　　　　　┣┓
+//  ┃　　　　　　　┏┛
+//  ┗┓┓┏━━━━┳┓┏━━┛
+//   ┃┫┫    ┃┫┫
+//   ┗┻┛    ┗┻┛

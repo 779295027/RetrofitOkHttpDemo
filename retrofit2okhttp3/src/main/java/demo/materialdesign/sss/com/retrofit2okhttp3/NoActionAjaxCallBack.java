@@ -20,18 +20,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- *  Created by sunshaoshuai on 16/9/5.
+ * Created by sunshaoshuai on 16/9/5.
  * 不需要返回操作的回调
  */
-public class NoActionAjaxCallBack implements Callback {
+public class NoActionAjaxCallBack<T> implements Callback<T> {
 
     @Override
-    public void onResponse(Call call, Response response) {
+    public void onResponse(Call<T> call, Response<T> response) {
 
     }
 
     @Override
-    public void onFailure(Call call, Throwable t) {
+    public void onFailure(Call<T> call, Throwable t) {
     }
 
 }

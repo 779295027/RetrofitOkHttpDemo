@@ -26,6 +26,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -38,6 +39,7 @@ public class RetrofitInstanceImpl extends RetrofitInstance {
     private OkHttpClient client;
     private RetrofitService service;
     private Call<ResopnseData> call;
+    private Call<ResponseBody> bodyCall;
 
     public RetrofitInstanceImpl() {
         client = new OkHttpClient.Builder()
@@ -82,6 +84,16 @@ public class RetrofitInstanceImpl extends RetrofitInstance {
     public void fromPost(String path, MultipartBody.Part file, Map<String, RequestBody> map, NoActionAjaxCallBack callBack) {
         call = service.fromPost(path, file, map != null ? map : new HashMap<String, RequestBody>());
         enqueue(callBack);
+    }
+
+    @Override
+    public void download(String path, Map<String, Object> map, DownloadCallBack callBack) {
+        try {
+            bodyCall = service.download(path, map);
+            bodyCall.enqueue(callBack != null ? callBack : new NoActionAjaxCallBack());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

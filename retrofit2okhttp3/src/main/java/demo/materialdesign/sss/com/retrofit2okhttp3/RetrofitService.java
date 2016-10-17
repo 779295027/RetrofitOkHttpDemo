@@ -19,6 +19,7 @@ import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -66,4 +67,14 @@ public interface RetrofitService {
     @Multipart
     @POST("{path}")
     Call<ResopnseData> fromPost(@Path("path") String path, @Part MultipartBody.Part file, @PartMap Map<String, RequestBody> map);
+
+    /**
+     * json数据格式 post 方式请求 用于单个文件下载
+     *
+     * @param path 服务器相对路径
+     * @param map  参数列表
+     * @return 返回数据流
+     */
+    @POST("{path}")
+    Call<ResponseBody> download(@Path("path") String path, @Body Map map);
 }

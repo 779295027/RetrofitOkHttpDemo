@@ -1,3 +1,5 @@
+
+
 # RetrofitOkHttpDemo
 
 此demo只是用于Retrofit2.0和OkHttp3.0的初学使用，以供参考
@@ -20,6 +22,12 @@ Mainactivty 中有七种使用方式，前两种为OKHttp的调用方式，然�
 
 数据返回格式为ResopnseData对象，如需要请自行改动
 
+### 增加下载功能
+
+与jsonpost调用方式一样，回调使用DownloadCallBack，
+DownloadCallBack会返回文件的数据流，需要自己对数据流处理
+
+（为了满足使用post请求返回图片数据流进行加载）
 
 ### 注
 这只是作者测试用的,如有不对之处，请评论

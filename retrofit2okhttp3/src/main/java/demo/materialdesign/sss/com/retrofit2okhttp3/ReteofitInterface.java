@@ -70,4 +70,15 @@ public interface ReteofitInterface {
      * @param callBack 回调
      */
     void fromPost(String path, MultipartBody.Part file, Map<String, RequestBody> map, NoActionAjaxCallBack callBack);
+
+
+    /**
+     * json数据格式的post请求
+     * 用于下载单个资源
+     *
+     * @param path     相对路径
+     * @param map      参数列表
+     * @param callBack 回调
+     */
+    void download(String path, Map<String, Object> map, DownloadCallBack callBack);
 }

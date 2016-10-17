@@ -26,7 +26,7 @@ import retrofit2.Response;
 /**
  * Created by sunshaoshuai on 16/9/5.
  */
-public abstract class SssAjaxCallBack extends NoActionAjaxCallBack implements Callback {
+public abstract class SssAjaxCallBack extends NoActionAjaxCallBack {
     /**
      * 请求成功
      *
