@@ -19,6 +19,6 @@ package demo.materialdesign.sss.com.retrofit2okhttp3;
  * Created by sunshaoshuai on 16/9/18.
  */
 public class HttpUrl {
-    public static final String DOMAIN_NAME = "你的域名";
-    public static final String TOKEN_NAME = "自定义token的名称";
+    public static final String DOMAIN_NAME = "http://dudongliang.blob.core.chinacloudapi.cn";
+    public static final String TOKEN_NAME = "";
 }

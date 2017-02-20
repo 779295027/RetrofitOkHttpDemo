@@ -29,7 +29,11 @@ public abstract class DownloadCallBack extends NoActionAjaxCallBack<ResponseBody
 
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        onReceiveData(response.body().byteStream());
+        try {
+            onReceiveData(response.body().byteStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -46,9 +50,19 @@ public abstract class DownloadCallBack extends NoActionAjaxCallBack<ResponseBody
 
     /**
      * 执行成功
+     *
+     * @param inputStream 下载的文件的数据流
      */
     public abstract void onReceiveData(InputStream inputStream);
 
+    /**
+     * 下载中
+     *
+     * @param totalLength 文件总大小
+     * @param length      已下载大小
+     */
+    public void onDownloading(long totalLength, long length) {
+    }
 
     /**
      * 未连接到服务器

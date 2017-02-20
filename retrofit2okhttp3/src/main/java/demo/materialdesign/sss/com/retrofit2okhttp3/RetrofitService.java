@@ -69,12 +69,31 @@ public interface RetrofitService {
     Call<ResopnseData> fromPost(@Path("path") String path, @Part MultipartBody.Part file, @PartMap Map<String, RequestBody> map);
 
     /**
-     * json数据格式 post 方式请求 用于单个文件下载
+     * json数据格式 Get 方式请求 用于单个文件下载
+     *
+     * @param path 服务器相对路径
+     * @return 返回数据流
+     */
+    @GET("{path}")
+    Call<ResponseBody> downloadForGet(@Path("path") String path);
+
+    /**
+     * json数据格式 Get 方式请求 用于单个文件下载(带参数)
+     *
+     * @param path 服务器相对路径
+     * @return 返回数据流
+     */
+    @GET("{path}")
+    Call<ResponseBody> downloadForGet(@Path("path") String path, @QueryMap Map<String, String> map);
+
+    /**
+     * json数据格式 Post 方式请求
      *
      * @param path 服务器相对路径
      * @param map  参数列表
-     * @return 返回数据流
+     * @return 返回已经格式化好的数据，格式化成User类型
      */
     @POST("{path}")
-    Call<ResponseBody> download(@Path("path") String path, @Body Map map);
+    Call<ResponseBody> downloadForPost(@Path("path") String path, @Body Map map);
+
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2016.   Sss
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -13,8 +12,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,51 +23,95 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.sunshaoshuai.retrofitokhttpdemo.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-
-    <Button
-        android:id="@+id/OKHttp_Post"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="OKHttp Post" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="okhttp3.0"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/OKHttp_Post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OKHttp Post" />
 
 
-    <Button
-        android:id="@+id/OKHttp_Get"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="OKHttp Get" />
+        <Button
+            android:id="@+id/OKHttp_Get"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OKHttp Get" />
 
-    <Button
-        android:id="@+id/Retrofit_Post_two"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="同步Retrofit Post" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="Retrofit2.0"
+            android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/Retrofit_Post"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="异步Retrofit Post" />
+        <Button
+            android:id="@+id/Retrofit_Post_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="同步 Post" />
 
-    <Button
-        android:id="@+id/Retrofit_Post_three"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="同步Retrofit Post JsonObject返回格式" />
+        <Button
+            android:id="@+id/Retrofit_Post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="异步 Post" />
 
-    <Button
-        android:id="@+id/Retrofit_From_upload"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="From表单格式Post上传" />
+        <Button
+            android:id="@+id/Retrofit_Post_three"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="同步 JsonObject 返回格式" />
 
-    <Button
-        android:id="@+id/Retrofit_okhttp_post"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Retrofit2.0+okhttp3.0 post请求" />
-</LinearLayout>
+        <Button
+            android:id="@+id/Retrofit_From_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="From表单格式Post上传" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="Retrofit2.0+okhttp3.0"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/Retrofit_okhttp_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="post 请求" />
+
+        <Button
+            android:id="@+id/Retrofit_okhttp_get_download"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="get 请求 download" />
+
+        <Button
+            android:id="@+id/Retrofit_okhttp_get_download_parameter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="get 带参数 download " />
+
+        <Button
+            android:id="@+id/Retrofit_okhttp_post_download"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Post 请求 download" />
+    </LinearLayout>
+</ScrollView>

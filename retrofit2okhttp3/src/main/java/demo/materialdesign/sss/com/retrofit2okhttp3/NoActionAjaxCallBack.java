@@ -25,6 +25,7 @@ import retrofit2.Response;
  */
 public class NoActionAjaxCallBack<T> implements Callback<T> {
 
+
     @Override
     public void onResponse(Call<T> call, Response<T> response) {
 

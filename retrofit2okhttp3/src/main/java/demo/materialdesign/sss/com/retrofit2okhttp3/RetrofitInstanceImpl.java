@@ -87,9 +87,29 @@ public class RetrofitInstanceImpl extends RetrofitInstance {
     }
 
     @Override
-    public void download(String path, Map<String, Object> map, DownloadCallBack callBack) {
+    public void downloadForGet(String path, DownloadCallBack callBack) {
         try {
-            bodyCall = service.download(path, map);
+            bodyCall = service.downloadForGet(path);
+            bodyCall.enqueue(callBack != null ? callBack : new NoActionAjaxCallBack());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void downloadForGet(String path, Map<String, String> map, DownloadCallBack callBack) {
+        try {
+            bodyCall = service.downloadForGet(path, map);
+            bodyCall.enqueue(callBack != null ? callBack : new NoActionAjaxCallBack());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void downloadForPost(String path, Map<String, Object> map, DownloadCallBack callBack) {
+        try {
+            bodyCall = service.downloadForPost(path, map);
             bodyCall.enqueue(callBack != null ? callBack : new NoActionAjaxCallBack());
         } catch (Exception e) {
             e.printStackTrace();

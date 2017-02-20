@@ -15,6 +15,7 @@
 
 package com.example.sunshaoshuai.retrofitokhttpdemo;
 
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,18 +25,29 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import demo.materialdesign.sss.com.retrofit2okhttp3.DownloadCallBack;
 import demo.materialdesign.sss.com.retrofit2okhttp3.HttpUrl;
 import demo.materialdesign.sss.com.retrofit2okhttp3.NoActionAjaxCallBack;
 import demo.materialdesign.sss.com.retrofit2okhttp3.RetrofitInstance;
+import demo.materialdesign.sss.com.retrofit2okhttp3.RetrofitService;
 import demo.materialdesign.sss.com.retrofit2okhttp3.SssAjaxCallBack;
+import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -46,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String 额外的参数对象;
     private String 额外的参数名;
     private String 你的接口相对路径;
+    private String Get方式请求文件路径;
+    private String Post方式请求文件的方法;
 
     private String DOMAIN_NAME = HttpUrl.DOMAIN_NAME;
     private String TAG = "MainActivity";
@@ -62,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.OKHttp_Get).setOnClickListener(this);
         findViewById(R.id.Retrofit_From_upload).setOnClickListener(this);
         findViewById(R.id.Retrofit_okhttp_post).setOnClickListener(this);
+        findViewById(R.id.Retrofit_okhttp_get_download).setOnClickListener(this);
+        findViewById(R.id.Retrofit_okhttp_get_download_parameter).setOnClickListener(this);
+        findViewById(R.id.Retrofit_okhttp_post_download).setOnClickListener(this);
     }
 
 
@@ -89,7 +106,153 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.Retrofit_okhttp_post:
                 onRetrofitOkhttpPost();
                 break;
+            case R.id.Retrofit_okhttp_get_download:
+                onRetrofitGetDownload();
+                break;
+            case R.id.Retrofit_okhttp_get_download_parameter:
+                onRetrofitGetDownload2();
+                break;
+            case R.id.Retrofit_okhttp_post_download:
+                onRetrofitPostDownload();
+                break;
         }
+    }
+
+    /**
+     * 异步Retrofit Post 下载
+     */
+    private void onRetrofitPostDownload() {
+        Map<String, Object> 传递的参数 = new HashMap<>();
+        String 参数名 = "";
+        String 参数值 = "";
+        传递的参数.put(参数名, 参数值);
+        retrofit.downloadForPost(Post方式请求文件的方法, 传递的参数, new DownloadCallBack() {
+
+            @Override
+            public void onReceiveData(InputStream inputStream) {
+                // TODO: 2017/2/20 下载成功
+                Log.e("下载", "下载成功");
+            }
+
+            @Override
+            public void onConnectServerFailed(Call call, Throwable t) {
+                // TODO: 2017/2/20 下载失败
+                Log.e("下载", "下载失败");
+            }
+        });
+
+    }
+
+    /**
+     * 异步Retrofit Get 下载
+     */
+    private void onRetrofitGetDownload2() {
+        Retrofit retrofit;
+        OkHttpClient client;
+        RetrofitService service;
+        Call<ResponseBody> bodyCall;
+        client = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .addNetworkInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request requestOrigin = chain.request();
+                        Request authorised = requestOrigin.newBuilder()
+                                .header("EEXUU-Token", "4327B96D91AC3875D47237CC3F9824653F7C4D380CA4899146BD20870DA31F2DF06F08D5E90DB4665C91F359E7330479AA7181C2D710A5F0E7A112BA5EA9E65101B3575570671EFA63FFB5FEB53F76F92AF2564723EDB1490D916FFB8C27DC543D3B5D47EAC5162F30F68A25EC16AECE43B7F3380A7317D358E705F96FDB6F77DFE49B3C57B8578FC5EEA1BCC0D4EE442A529686175322F07BF12F07972FD722D59C17D9F0DCB2374772F4FB0A6F348CE4A3C7CA44BB152F84A5B544C419D59F421790524381730F5C279A5F9206CE40")
+                                .build();
+                        Response response = chain.proceed(authorised);
+                        return response;
+                    }
+                })
+                .build();
+        retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("https://api.eexuu.com")
+                .client(client)
+                .build();
+        service = retrofit.create(RetrofitService.class);
+        Map<String, String> map = new HashMap<>();
+        map.put("md5", "d8cb9e819f3f711b7beed1f56db6c31f");
+        bodyCall = service.downloadForGet("api/Resource/DownloadResource", map);
+        bodyCall.enqueue(new DownloadCallBack() {
+
+
+            @Override
+            public void onReceiveData(InputStream inputStream) {
+                try {
+                    //获取文件总长度
+                    long totalLength = inputStream.available();
+
+                    String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "/eexuu";
+                    File file = new File(path, "download.jpg");
+                    FileOutputStream fos = new FileOutputStream(file);
+                    BufferedInputStream bis = new BufferedInputStream(inputStream);
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = bis.read(buffer)) != -1) {
+                        fos.write(buffer, 0, length);
+                        //此处进行更新操作
+                        //length为文件的已下载的字节数
+                        //如 onDownloading(totalLength,length);
+
+                    }
+                    fos.flush();
+                    fos.close();
+                    bis.close();
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onConnectServerFailed(Call call, Throwable t) {
+                // TODO: 2017/2/20 下载失败
+                Log.e("下载", "下载失败");
+            }
+        });
+
+//        Map<String, String> 传递的参数 = new HashMap<>();
+//        String 参数名 = "";
+//        String 参数值 = "";
+//        传递的参数.put(参数名, 参数值);
+//        this.retrofit.downloadForGet(Get方式请求文件路径, 传递的参数, new DownloadCallBack() {
+//
+//            @Override
+//            public void onReceiveData(InputStream inputStream) {
+//                // TODO: 2017/2/20 下载成功
+//                Log.e("下载", "下载成功");
+//            }
+//
+//            @Override
+//            public void onConnectServerFailed(Call call, Throwable t) {
+//                // TODO: 2017/2/20 下载失败
+//                Log.e("下载", "下载失败");
+//            }
+//        });
+
+
+    }
+
+    /**
+     * 异步Retrofit Get 下载
+     */
+    private void onRetrofitGetDownload() {
+        retrofit.downloadForGet(Get方式请求文件路径, new DownloadCallBack() {
+
+            @Override
+            public void onReceiveData(InputStream inputStream) {
+                // TODO: 2017/2/20 下载成功
+                Log.e("下载", "下载成功");
+            }
+
+            @Override
+            public void onConnectServerFailed(Call call, Throwable t) {
+                // TODO: 2017/2/20 下载失败
+                Log.e("下载", "下载失败");
+            }
+        });
     }
 
     /**
@@ -177,7 +340,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * @return
      */
     private void doJsonPost(String path, @NonNull String data, NoActionAjaxCallBack callBack) {
-
         retrofit.jsonPost(path, data, callBack);
     }
 

@@ -73,6 +73,24 @@ public interface ReteofitInterface {
 
 
     /**
+     * json数据格式的Get请求
+     * 用于下载单个资源
+     *
+     * @param path     相对路径
+     * @param callBack 回调
+     */
+    void downloadForGet(String path, DownloadCallBack callBack);
+
+    /**
+     * json数据格式的Get请求,带参数
+     * 用于下载单个资源
+     *
+     * @param path     相对路径
+     * @param callBack 回调
+     */
+    void downloadForGet(String path, Map<String, String> map, DownloadCallBack callBack);
+
+    /**
      * json数据格式的post请求
      * 用于下载单个资源
      *
@@ -80,5 +98,5 @@ public interface ReteofitInterface {
      * @param map      参数列表
      * @param callBack 回调
      */
-    void download(String path, Map<String, Object> map, DownloadCallBack callBack);
+    void downloadForPost(String path, Map<String, Object> map, DownloadCallBack callBack);
 }
