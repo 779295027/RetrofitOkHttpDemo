@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public Response intercept(Chain chain) throws IOException {
                         Request requestOrigin = chain.request();
                         Request authorised = requestOrigin.newBuilder()
-                                .header("EEXUU-Token", "4327B96D91AC3875D47237CC3F9824653F7C4D380CA4899146BD20870DA31F2DF06F08D5E90DB4665C91F359E7330479AA7181C2D710A5F0E7A112BA5EA9E65101B3575570671EFA63FFB5FEB53F76F92AF2564723EDB1490D916FFB8C27DC543D3B5D47EAC5162F30F68A25EC16AECE43B7F3380A7317D358E705F96FDB6F77DFE49B3C57B8578FC5EEA1BCC0D4EE442A529686175322F07BF12F07972FD722D59C17D9F0DCB2374772F4FB0A6F348CE4A3C7CA44BB152F84A5B544C419D59F421790524381730F5C279A5F9206CE40")
+                                .header(HttpUrl.TOKEN_NAME, "")
                                 .build();
                         Response response = chain.proceed(authorised);
                         return response;
@@ -194,13 +194,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .build();
         retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://api.eexuu.com")
+                .baseUrl(HttpUrl.DOMAIN_NAME)
                 .client(client)
                 .build();
         service = retrofit.create(RetrofitService.class);
         Map<String, String> map = new HashMap<>();
-        map.put("md5", "d8cb9e819f3f711b7beed1f56db6c31f");
-        bodyCall = service.downloadForGet("api/Resource/DownloadResource", map);
+        String 參數名="";
+        String 參數值="";
+        map.put(參數名, 參數值);
+        bodyCall = service.downloadForGet(你的接口相对路径, map);
         bodyCall.enqueue(new DownloadCallBack() {
 
             @Override
@@ -225,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String 参数名 = "";
         String 参数值 = "";
         传递的参数.put(参数名, 参数值);
-        this.retrofit.downloadForGet(Get方式请求文件路径, 传递的参数, new DownloadCallBack() {
+        this.retrofit.downloadForGet(你的接口相对路径, 传递的参数, new DownloadCallBack() {
 
             @Override
             public void onReceiveData(InputStream inputStream) {
