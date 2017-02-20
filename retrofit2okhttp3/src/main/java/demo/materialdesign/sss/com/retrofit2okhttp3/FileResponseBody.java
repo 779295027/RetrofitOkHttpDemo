@@ -28,7 +28,6 @@ import okio.Source;
 /**
  * Created by sunshaoshuai on 2017/2/20.
  */
-
 public class FileResponseBody extends ResponseBody {
     /**
      * 实际请求体
@@ -58,7 +57,6 @@ public class FileResponseBody extends ResponseBody {
             // Returns a new source that buffers reads from source.
             // The returned source will perform bulk reads into its in-memory buffer.
             // Use this wherever you read a source to get an ergonomic and efficient access to data.
-            //(我也不太懂是什么意思，但是就是调用这个方法)
             mBufferedSource = Okio.buffer(source(responseBody.source()));
         }
         return mBufferedSource;
@@ -87,7 +85,7 @@ public class FileResponseBody extends ResponseBody {
     /**
      * 回调进度接口
      * <p>
-     * 将资源对象输出到令一个资源对象，在read的时候进行下载进度的更新
+     * 将资源对象输出到另一个资源对象，在read的时候进行下载进度的更新
      *
      * @param source 资源对象
      * @return Source

@@ -53,7 +53,7 @@ public abstract class DownloadCallBack extends NoActionAjaxCallBack<ResponseBody
      *
      * @param inputStream 下载的文件的数据流
      */
-    public abstract void onReceiveData(InputStream inputStream);
+    public void onReceiveData(InputStream inputStream){};
 
     /**
      * 下载中
@@ -70,5 +70,5 @@ public abstract class DownloadCallBack extends NoActionAjaxCallBack<ResponseBody
      * @param call
      * @param t
      */
-    public abstract void onConnectServerFailed(Call call, Throwable t);
+    public   void onConnectServerFailed(Call call, Throwable t){};
 }

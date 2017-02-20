@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RetrofitOkHttpDemo.iml" filepath="$PROJECT_DIR$/RetrofitOkHttpDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RetrofitOkHttpDemo.iml" filepath="$PROJECT_DIR$/RetrofitOkHttpDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/retrofit2okhttp3/retrofit2okhttp3.iml" filepath="$PROJECT_DIR$/retrofit2okhttp3/retrofit2okhttp3.iml" />
       <module fileurl="file://$PROJECT_DIR$/retrofit2okhttp3/retrofit2okhttp3.iml" filepath="$PROJECT_DIR$/retrofit2okhttp3/retrofit2okhttp3.iml" />
     </modules>
   </component>

@@ -30,11 +30,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import demo.materialdesign.sss.com.retrofit2okhttp3.DownloadCallBack;
+import demo.materialdesign.sss.com.retrofit2okhttp3.FileResponseBody;
 import demo.materialdesign.sss.com.retrofit2okhttp3.HttpUrl;
 import demo.materialdesign.sss.com.retrofit2okhttp3.NoActionAjaxCallBack;
 import demo.materialdesign.sss.com.retrofit2okhttp3.RetrofitInstance;
@@ -144,9 +146,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * 异步Retrofit Get 下载
+     * 异步Retrofit Get 下载 2
      */
     private void onRetrofitGetDownload2() {
+        //初始化當前長度
+        當前長度=new BigDecimal(0);
+        // TODO: 2017/2/20  顯示下載進度有兩種方法，onRetrofitGetDownload同理，也有兩種，方法是一樣，所以就不一一贅述了
+//        方法一();
+        方法二();
+
+
+    }
+    private void 方法一(){
         Retrofit retrofit;
         OkHttpClient client;
         RetrofitService service;
@@ -165,6 +176,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return response;
                     }
                 })
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Response response = chain.proceed(chain.request());
+                        //将ResponseBody转换成我们需要的FileResponseBody
+                        return response.newBuilder().body(new FileResponseBody(response.body(), new DownloadCallBack() {
+                            @Override
+                            public void onDownloading(long totalLength, long length) {
+                                // TODO: 2017/2/20 在此进行文件下载进度的更新（不推荐使用此方法，因爲這裏還需要在重寫一遍請求，或者直接在這裏進行判斷是否為下載）
+
+                            }
+                        })).build();
+
+                    }
+                })
                 .build();
         retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
@@ -177,31 +203,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bodyCall = service.downloadForGet("api/Resource/DownloadResource", map);
         bodyCall.enqueue(new DownloadCallBack() {
 
-
             @Override
             public void onReceiveData(InputStream inputStream) {
                 try {
-                    //获取文件总长度
-                    long totalLength = inputStream.available();
-
-                    String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "/eexuu";
-                    File file = new File(path, "download.jpg");
-                    FileOutputStream fos = new FileOutputStream(file);
-                    BufferedInputStream bis = new BufferedInputStream(inputStream);
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = bis.read(buffer)) != -1) {
-                        fos.write(buffer, 0, length);
-                        //此处进行更新操作
-                        //length为文件的已下载的字节数
-                        //如 onDownloading(totalLength,length);
-
-                    }
-                    fos.flush();
-                    fos.close();
-                    bis.close();
-                    inputStream.close();
-                } catch (IOException e) {
+                    Log.e("下载", "下载成功");
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -212,27 +218,76 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.e("下载", "下载失败");
             }
         });
+    }
 
-//        Map<String, String> 传递的参数 = new HashMap<>();
-//        String 参数名 = "";
-//        String 参数值 = "";
-//        传递的参数.put(参数名, 参数值);
-//        this.retrofit.downloadForGet(Get方式请求文件路径, 传递的参数, new DownloadCallBack() {
-//
-//            @Override
-//            public void onReceiveData(InputStream inputStream) {
-//                // TODO: 2017/2/20 下载成功
-//                Log.e("下载", "下载成功");
-//            }
-//
-//            @Override
-//            public void onConnectServerFailed(Call call, Throwable t) {
-//                // TODO: 2017/2/20 下载失败
-//                Log.e("下载", "下载失败");
-//            }
-//        });
+    private void 方法二(){
+        Map<String, String> 传递的参数 = new HashMap<>();
+        String 参数名 = "";
+        String 参数值 = "";
+        传递的参数.put(参数名, 参数值);
+        this.retrofit.downloadForGet(Get方式请求文件路径, 传递的参数, new DownloadCallBack() {
 
+            @Override
+            public void onReceiveData(InputStream inputStream) {
+                // TODO: 2017/2/20 下载成功
+                try {
+                    saveFile(inputStream);
+                    Log.e("下载", "下载成功");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
+            @Override
+            public void onConnectServerFailed(Call call, Throwable t) {
+                // TODO: 2017/2/20 下载失败
+                Log.e("下载", "下载失败");
+            }
+        });
+    }
+
+    /**
+     * 保存文件到本地
+     * @param inputStream 數據流
+     * @throws Exception 保存時可能出現的異常 一般為IOException，為防止可能會出現NullPointerException，所以這裏直接抛出Exception
+     */
+    private void  saveFile(InputStream inputStream) throws Exception{
+        //获取文件总长度
+        long totalLength = inputStream.available();
+
+        String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "";
+        File file = new File(path, "download.jpg");
+        FileOutputStream fos = new FileOutputStream(file);
+        BufferedInputStream bis = new BufferedInputStream(inputStream);
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = bis.read(buffer)) != -1) {
+            fos.write(buffer, 0, length);
+            //此处进行更新操作
+            //length为文件的已下载的字节数
+            MainActivity.this.onDownloading(totalLength,length);
+        }
+        fos.flush();
+        fos.close();
+        bis.close();
+        inputStream.close();
+    }
+
+    private BigDecimal 當前長度=new BigDecimal(0);
+    /**
+     * 下載進度
+     * todo 這裏進行進度條的更新(我就偷個懒，log日志輸出一下算了)
+     *
+     *
+     * @param totalLength
+     * @param length
+     */
+    private void onDownloading(long totalLength, int length){
+        BigDecimal 總長度=new BigDecimal(totalLength);
+        BigDecimal 叠加長度=new BigDecimal(length);
+        當前長度=當前長度.add(叠加長度);
+        Double 百分比=  當前長度.divide(總長度,4,BigDecimal.ROUND_HALF_UP).doubleValue();
+        Log.d("下載中","總長度"+總長度+"\n"+ "當前長度"+當前長度+"\n"+"百分比"+ (百分比*100)  +"%");
     }
 
     /**
@@ -244,7 +299,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onReceiveData(InputStream inputStream) {
                 // TODO: 2017/2/20 下载成功
-                Log.e("下载", "下载成功");
+                try {
+                    saveFile(inputStream);
+                    Log.e("下载", "下载成功");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
